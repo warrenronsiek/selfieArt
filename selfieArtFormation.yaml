@@ -1,0 +1,45 @@
+---
+Resources:
+  GpuSpotInstance:
+    Type: AWS::EC2::SpotFleet
+    Properties:
+      SpotFleetRequestConfigData:
+        IamFleetRole: !GetAtt [InstanceRole, Arn]
+        SpotPrice: .1
+        TargetCapacity: 1
+        LaunchSpecifications:
+          - InstanceType: g2.2xlarge
+            ImageId: ami-f173cc91
+            SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet
+            SecurityGroups:
+              - GroupId:
+                  !ImportValue VPCDefaultPublicAppTabSecGroup
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - spotfleet.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: EC2PowerUser
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:*
+                Resource: "*"
+        - PolicyName: GenericIamUser
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                  - iam:ListRoles
+                  - iam:ListInstanceProfiles
+                Resource: "*"
+
