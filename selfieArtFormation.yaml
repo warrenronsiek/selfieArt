@@ -5,15 +5,18 @@ Resources:
     Properties:
       SpotFleetRequestConfigData:
         IamFleetRole: !GetAtt [InstanceRole, Arn]
-        SpotPrice: .1
+        SpotPrice: .3
         TargetCapacity: 1
         LaunchSpecifications:
           - InstanceType: g2.2xlarge
             ImageId: ami-f173cc91
-            SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet
-            SecurityGroups:
-              - GroupId:
-                  !ImportValue VPCDefaultPublicAppTabSecGroup
+            KeyName: apptab
+            NetworkInterfaces:
+              - AssociatePublicIpAddress: true
+                DeviceIndex: 0
+                SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet2b
+                Groups:
+                  - !ImportValue VPCDefaultPublicAppTabSecGroup
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -42,4 +45,3 @@ Resources:
                   - iam:ListRoles
                   - iam:ListInstanceProfiles
                 Resource: "*"
-
