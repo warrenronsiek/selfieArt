@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-
-#Increase volume size
-aws ec2 modify-volume --region us-west-2b --volume-id vol-0fd122f8c4df2f745 --size 30
-
 ssh -i 'selfie-art.pem' ubuntu@54.191.109.187
 sudo apt-get update
 sudo apt-get upgrade
