@@ -5,16 +5,16 @@ Resources:
     Properties:
       SpotFleetRequestConfigData:
         IamFleetRole: !GetAtt [InstanceRole, Arn]
-        SpotPrice: 1.3
+        SpotPrice: .4
         TargetCapacity: 1
         LaunchSpecifications:
-          - InstanceType: g2.8xlarge
+          - InstanceType: g2.2xlarge
             ImageId: ami-a58d0dc5
             KeyName: selfie-art
             NetworkInterfaces:
               - AssociatePublicIpAddress: true
                 DeviceIndex: 0
-                SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet2b
+                SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet
                 Groups:
                   - !ImportValue VPCDefaultPublicAppTabSecGroup
   InstanceRole:
