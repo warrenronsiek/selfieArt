@@ -8,9 +8,13 @@ Resources:
         SpotPrice: .4
         TargetCapacity: 1
         LaunchSpecifications:
-          - InstanceType: g2.2xlarge
+          - InstanceType: p2.xlarge
             ImageId: ami-a58d0dc5
             KeyName: selfie-art
+            BlockDeviceMappings:
+              - DeviceName: /dev/sda1
+                Ebs:
+                  VolumeSize: 50
             NetworkInterfaces:
               - AssociatePublicIpAddress: true
                 DeviceIndex: 0

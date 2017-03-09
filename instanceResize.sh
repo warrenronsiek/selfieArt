@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-instance_id=enterIDhere
+instance_id=i-0ef2a95c3c602dee0
 size=20
 region=us-west-2
 
@@ -50,6 +50,10 @@ new_volume_id=$(aws ec2 create-volume \
   --output text \
   --query 'VolumeId')
 echo "new volume: $new_volume_id"
+
+aws ec2 wait volume-available \
+  --region "$region"
+  --volume-id "$new_volume_id"
 
 aws ec2 attach-volume \
   --region "$region" \

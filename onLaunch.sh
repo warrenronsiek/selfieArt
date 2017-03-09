@@ -1,43 +1,48 @@
 #!/usr/bin/env bash
 
-ssh -i 'selfie-art.pem' ubuntu@54.191.109.187
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 sudo apt-get install -y build-essential git python-pip libfreetype6-dev libxft-dev libncurses-dev libopenblas-dev gfortran python-matplotlib libblas-dev liblapack-dev libatlas-base-dev python-dev python-pydot linux-headers-generic linux-image-extra-virtual unzip python-numpy swig python-pandas python-sklearn unzip wget pkg-config zip g++ zlib1g-dev
 sudo pip install -U pip
+
 wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-rm cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 sudo apt-get update
 sudo apt-get install -y cuda
+export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
-# scp -i "~/Keys/selfie-art.pem" cudnn-8.0-linux-x64-v5.0-ga.tgz ubuntu@54.218.14.139:/home/ubuntu
+# scp -i "~/Keys/selfie-art.pem" cudnn-8.0-linux-x64-v5.1.tgz ubuntu@ec2-54-200-245-43.us-west-2.compute.amazonaws.com:/home/ubuntu
 # https://developer.nvidia.com/rdp/cudnn-download
-tar -xvf cudnn-8.0-linux-x64-v5.0-ga.tgz
-sudo cp cuda/include/cudnn.h /usr/local/cuda/include
-sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
-sudo reboot
+tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
+sudo cp -r cuda/include/cudnn.h /usr/local/cuda/include
+sudo cp -r cuda/lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 export CUDA_HOME=/usr/local/cuda
 export CUDA_ROOT=/usr/local/cuda
 export PATH=$PATH:$CUDA_ROOT/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64
 
-sudo add-apt-repository -y ppa:webupd8team/java
-sudo apt-get update
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-sudo apt-get install -y oracle-java8-installer
+sudo pip install tensorflow-gpu
 
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-sudo apt-get update && sudo apt-get install bazel
-sudo apt-get upgrade bazel
-
-git clone --recurse-submodules https://github.com/tensorflow/tensorflow
-cd tensorflow
-TF_UNOFFICIAL_SETTING=1 ./configure
-
-bazel build -c opt --config=cuda //tensorflow/cc:tutorials_example_trainer
-bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-sudo pip install --upgrade /tmp/tensorflow_pkg/tensorflow-1.0.0-cp27-cp27mu-linux_x86_64.whl
+##The following should only be used if you want to build tensorflow yourself
+#sudo add-apt-repository -y ppa:webupd8team/java
+#sudo apt-get update -y
+#echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+#echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+#sudo apt-get install -y oracle-java8-installer
+#echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+#curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+#sudo apt-get update && sudo apt-get install -y bazel
+#sudo apt-get upgrade -y bazel
+#
+#git clone https://github.com/tensorflow/tensorflow
+#cd tensorflow
+#./configure
+## all default except:
+## 1. Do you wish to build TensorFlow with CUDA support? [y/N] y
+## 2. Please specify the CUDA SDK version you want to use, e.g. 7.0. [Leave empty to use system default]: 8.0
+## 3. Please specify the Cudnn version you want to use. [Leave empty to use system default]: 5.1.5
+#bazel build -c opt --config=cuda //tensorflow/cc:tutorials_example_trainer
+#bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+#sudo pip install /tmp/tensorflow_pkg/tensorflow-0.10.0-py2-none-any.whl
