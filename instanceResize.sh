@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-instance_id=i-0ef2a95c3c602dee0
+instance_id=your_id_here
 size=20
-region=us-west-2
+region=your_region
 
 root_device=$(aws ec2 describe-instances \
   --region "$region" \
