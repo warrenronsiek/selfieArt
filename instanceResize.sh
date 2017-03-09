@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-instance_id=
+instance_id=enterIDhere
 size=20
 region=us-west-2
 
