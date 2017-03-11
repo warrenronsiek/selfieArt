@@ -5,10 +5,10 @@ Resources:
     Properties:
       SpotFleetRequestConfigData:
         IamFleetRole: !GetAtt [SpotfleetRole, Arn]
-        SpotPrice: .4
+        SpotPrice: 1.6
         TargetCapacity: 1
         LaunchSpecifications:
-          - InstanceType: p2.xlarge
+          - InstanceType: p2.8xlarge
             ImageId: ami-a58d0dc5
             KeyName: selfie-art
             IamInstanceProfile:

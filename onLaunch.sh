@@ -4,27 +4,35 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y build-essential git python-pip libfreetype6-dev libxft-dev libncurses-dev libopenblas-dev gfortran python-matplotlib libblas-dev liblapack-dev libatlas-base-dev python-dev python-pydot linux-headers-generic linux-image-extra-virtual unzip python-numpy swig python-pandas python-sklearn unzip wget pkg-config zip g++ zlib1g-dev
 sudo pip install -U pip
+sudo apt-get install awscli -y
 
 wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 sudo apt-get update
 sudo apt-get install -y cuda
-export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
-export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+echo "PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}" > .bash_profile
+echo "LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" >> .bash_profile
 
-# scp -i "~/Keys/selfie-art.pem" cudnn-8.0-linux-x64-v5.1.tgz ubuntu@ec2-54-200-245-43.us-west-2.compute.amazonaws.com:/home/ubuntu
 # https://developer.nvidia.com/rdp/cudnn-download
+aws s3 cp s3://stackoverflow-public-bucket/cudnn-8.0-linux-x64-v5.1.tgz .
 tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
 sudo cp -r cuda/include/cudnn.h /usr/local/cuda/include
 sudo cp -r cuda/lib64/libcudnn* /usr/local/cuda/lib64
 sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+echo "CUDA_HOME=/usr/local/cuda" >> .bash_profile
+echo "CUDA_ROOT=/usr/local/cuda" >> .bash_profile
+echo "PATH=$PATH:$CUDA_ROOT/bin" >> .bash_profile
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64" >> .bash_profile
+
+export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export CUDA_HOME=/usr/local/cuda
 export CUDA_ROOT=/usr/local/cuda
-export PATH=$PATH:$CUDA_ROOT/bin
+export  PATH=$PATH:$CUDA_ROOT/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64
 
 sudo pip install tensorflow-gpu
-
+sudo reboot
 ##The following should only be used if you want to build tensorflow yourself
 #sudo add-apt-repository -y ppa:webupd8team/java
 #sudo apt-get update -y
