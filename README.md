@@ -6,16 +6,19 @@ Using tensorflow [image analogies](https://github.com/awentzonline/image-analogi
 Instructions
 --------
 
-1. Use either of the cloudformation templates to launch your instance (you will have to change your security group, VPC, etc.)
-2. Download CUDNN and put it in a bucket that your cloudformation has specified access.
-3. Follow the instructions at [image analogies](https://github.com/awentzonline/image-analogies) to install the package and network weights.
+1. Think of a new s3 bucket name.
+2. Go into the yaml template of your choice and replace \"warren-datasets\" line 113 and 114 with your bucket name.
+3. Use launchFormation.sh to create your formation. You need aws cli installed. Eg. `./launchFormation.sh your-unique-bucket-name selfieArtSuperSpotFormation`
+4. [Download CUDNN](https://developer.nvidia.com/rdp/cudnn-download) and put it in the bucket you just created.
+5. Done! It will take a bit to set up the formation and run the install scripts. (~30 min)
 
 Pro Tips
 --------
 
 * Do not use the g2 series instances - the GPUs only work with legacy NVIDIA drivers, and this significantly complicates Tensorflow Installation.
 * Use instanceResize.sh if you already have instances and you need more space on their root directory to install TF.
-* Use scp to get images into the instance, for some reason wget
+* You may need to ask for increased EC2 limits if you want to use the SuperSpotFormation.
+* If something goes wrong with the install scripts, consult the logs located in `/var/log`
 
 Thanks
 ------

@@ -45,6 +45,8 @@ Resources:
                     - "export  PATH=$PATH:$CUDA_ROOT/bin\n"
                     - "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64\n"
                     - "sudo pip install tensorflow-gpu\n"
+                    - "wget https://github.com/awentzonline/image-analogies/releases/download/v0.0.5/vgg16_weights.h5\n"
+                    - "sudo pip install neural-image-analogies\n"
                     - "sudo reboot"
             BlockDeviceMappings:
               - DeviceName: /dev/sda1

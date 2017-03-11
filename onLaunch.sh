@@ -31,6 +31,9 @@ export  PATH=$PATH:$CUDA_ROOT/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64
 
 sudo pip install tensorflow-gpu
+wget https://github.com/awentzonline/image-analogies/releases/download/v0.0.5/vgg16_weights.h5
+sudo pip install neural-image-analogies
+wget https://raw.githubusercontent.com/awentzonline/image-analogies/master/scripts/make_image_analogy.py
 sudo reboot
 ##The following should only be used if you want to build tensorflow yourself
 #sudo add-apt-repository -y ppa:webupd8team/java
