@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y build-essential git python-pip libfreetype6-dev libxft-dev libncurses-dev libopenblas-dev gfortran python-matplotlib libblas-dev liblapack-dev libatlas-base-dev python-dev python-pydot linux-headers-generic linux-image-extra-virtual unzip python-numpy swig python-pandas python-sklearn unzip wget pkg-config zip g++ zlib1g-dev
@@ -14,7 +13,7 @@ echo "PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}" > .bash_profile
 echo "LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" >> .bash_profile
 
 # https://developer.nvidia.com/rdp/cudnn-download
-aws s3 cp s3://stackoverflow-public-bucket/cudnn-8.0-linux-x64-v5.1.tgz .
+aws s3 cp s3://warren-datasets/cudnn-8.0-linux-x64-v5.1.tgz .
 tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
 sudo cp -r cuda/include/cudnn.h /usr/local/cuda/include
 sudo cp -r cuda/lib64/libcudnn* /usr/local/cuda/lib64
