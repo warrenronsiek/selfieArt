@@ -7,7 +7,7 @@ Instructions
 --------
 
 1. Use either of the cloudformation templates to launch your instance (you will have to change your security group, VPC, etc.)
-2. Run the script onLaunch once you have logged into the instance. Note that you need to download and scp CUDNN into the instance.
+2. Download CUDNN and put it in a bucket that your cloudformation has specified access.
 3. Follow the instructions at [image analogies](https://github.com/awentzonline/image-analogies) to install the package and network weights.
 
 Pro Tips

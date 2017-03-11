@@ -5,12 +5,12 @@ Resources:
     Properties:
       SpotFleetRequestConfigData:
         IamFleetRole: !GetAtt [SpotfleetRole, Arn]
-        SpotPrice: .4
+        SpotPrice: .25
         TargetCapacity: 1
         LaunchSpecifications:
           - InstanceType: p2.xlarge
-            ImageId: ami-a58d0dc5
-            KeyName: selfie-art
+            ImageId: ami-f4cc1de2
+            KeyName: selfie-art-us-east
             IamInstanceProfile:
               Arn: !GetAtt [InstanceProfile, Arn]
             UserData:
@@ -53,9 +53,9 @@ Resources:
             NetworkInterfaces:
               - AssociatePublicIpAddress: true
                 DeviceIndex: 0
-                SubnetId: !ImportValue VPCDefaultAppTabPublicSubnet2b
+                SubnetId: !Ref PublicSubnet
                 Groups:
-                  - !ImportValue VPCDefaultPublicAppTabSecGroup
+                  - !Ref PublicSecGroup
   SpotfleetRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -110,3 +110,64 @@ Resources:
                 Resource:
                   - "arn:aws:s3:::warren-datasets"
                   - "arn:aws:s3:::warren-datasets/*"
+  Vpc:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+  PublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId:
+        Ref: Vpc
+      AvailabilityZone: us-east-1a
+      CidrBlock: 10.0.0.0/24
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: Vpc
+      InternetGatewayId:
+        Ref: InternetGateway
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: GatewayAttachment
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: InternetGateway
+  RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet
+      RouteTableId:
+        Ref: RouteTable
+  AclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet
+      NetworkAclId:
+        Fn::GetAtt: [Vpc, DefaultNetworkAcl]
+  PublicSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Enable HTTP ingress"
+      VpcId:
+        Ref: Vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 8000
+          CidrIp: 0.0.0.0/0
