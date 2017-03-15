@@ -17,6 +17,7 @@ Resources:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
           SubnetId: !Ref PublicSubnet
+          DeleteOnTermination: true
           GroupSet:
             - !Ref PublicSecGroup
   InstanceProfile:
