@@ -5,49 +5,14 @@ Resources:
     Properties:
       SpotFleetRequestConfigData:
         IamFleetRole: !GetAtt [SpotfleetRole, Arn]
-        SpotPrice: .9
+        SpotPrice: .2
         TargetCapacity: 1
         LaunchSpecifications:
-          - InstanceType: p2.8xlarge
+          - InstanceType: p2.xlarge
             ImageId: ami-f4cc1de2
             KeyName: selfie-art-us-east-laptop
             IamInstanceProfile:
               Arn: !GetAtt [InstanceProfile, Arn]
-            UserData:
-              Fn::Base64:
-                Fn::Join:
-                  - ""
-                  - - "#!/usr/bin/env bash\n"
-                    - "sudo apt-get update\n"
-                    - "sudo apt-get upgrade -y\n"
-                    - "sudo apt-get install -y build-essential git python-pip libfreetype6-dev libxft-dev libncurses-dev libopenblas-dev gfortran python-matplotlib libblas-dev liblapack-dev libatlas-base-dev python-dev python-pydot linux-headers-generic linux-image-extra-virtual unzip python-numpy swig python-pandas python-sklearn unzip wget pkg-config zip g++ zlib1g-dev\n"
-                    - "sudo pip install -U pip\n"
-                    - "sudo apt-get install awscli -y\n"
-                    - "wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb\n"
-                    - "sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb\n"
-                    - "sudo apt-get update\n"
-                    - "sudo apt-get install -y cuda\n"
-                    - "echo \"PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}\" > .bash_profile\n"
-                    - "echo \"LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}\" >> .bash_profile\n"
-                    - "aws s3 cp s3://warren-datasets/cudnn-8.0-linux-x64-v5.1.tgz .\n"
-                    - "tar xvzf cudnn-8.0-linux-x64-v5.1.tgz\n"
-                    - "sudo cp -r cuda/include/cudnn.h /usr/local/cuda/include\n"
-                    - "sudo cp -r cuda/lib64/libcudnn* /usr/local/cuda/lib64\n"
-                    - "sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*\n"
-                    - "echo \"CUDA_HOME=/usr/local/cuda\" >> .bash_profile\n"
-                    - "echo \"CUDA_ROOT=/usr/local/cuda\" >> .bash_profile\n"
-                    - "echo \"PATH=$PATH:$CUDA_ROOT/bin\" >> .bash_profile\n"
-                    - "echo \"LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64\" >> .bash_profile\n"
-                    - "export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}\n"
-                    - "export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}\n"
-                    - "export CUDA_HOME=/usr/local/cuda\n"
-                    - "export CUDA_ROOT=/usr/local/cuda\n"
-                    - "export  PATH=$PATH:$CUDA_ROOT/bin\n"
-                    - "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_ROOT/lib64\n"
-                    - "sudo pip install tensorflow-gpu\n"
-                    - "wget https://github.com/awentzonline/image-analogies/releases/download/v0.0.5/vgg16_weights.h5\n"
-                    - "sudo pip install neural-image-analogies\n"
-                    - "sudo reboot"
             BlockDeviceMappings:
               - DeviceName: /dev/sda1
                 Ebs:

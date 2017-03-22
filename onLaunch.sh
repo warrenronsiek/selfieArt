@@ -35,6 +35,11 @@ wget https://github.com/awentzonline/image-analogies/releases/download/v0.0.5/vg
 sudo pip install neural-image-analogies
 wget https://raw.githubusercontent.com/awentzonline/image-analogies/master/scripts/make_image_analogy.py
 sudo reboot
+
+aws s3 cp s3://warren-datasets/sugarskull-A.jpg .
+aws s3 cp s3://warren-datasets/sugarskull-Ap.jpg .
+aws s3 cp s3://warren-datasets/sugarskull-B.jpg .
+
 ##The following should only be used if you want to build tensorflow yourself
 #sudo add-apt-repository -y ppa:webupd8team/java
 #sudo apt-get update -y

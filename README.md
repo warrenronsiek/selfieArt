@@ -18,7 +18,8 @@ Pro Tips
 * Do not use the g2 series instances - the GPUs only work with legacy NVIDIA drivers, and this significantly complicates Tensorflow Installation.
 * Use instanceResize.sh if you already have instances and you need more space on their root directory to install TF.
 * You may need to ask for increased EC2 limits if you want to use the SuperSpotFormation.
-* If something goes wrong with the install scripts, consult the logs located in `/var/log`
+* If something goes wrong with the install scripts, consult the logs located in `/var/log/cloud-init-output.log`
+* Run `nvidia-smi` to check and see if your gpus have their drivers installed correctly. You should get a readout describing your gpus and driver version.
 
 Thanks
 ------
